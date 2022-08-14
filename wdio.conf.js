@@ -1,3 +1,5 @@
+const {ReportAggregator} = require("wdio-html-nice-reporter");
+
 exports.config = {
     //
     // ====================
@@ -135,7 +137,53 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec'],
+    reporters: [
+        /*[
+            "spec",
+            {
+                symbols: {
+                    passed: '[PASS]',
+                    failed: '[FAIL]',
+                },
+            },
+            {
+                sauceLabsSharableLinks: false,
+            },
+        ],*/
+        ["html-nice", {
+            outputDir: './test/reports/html-reports/',
+            filename: 'report.html',
+            reportTitle: 'Test Report Title',
+            linkScreenshots: true,
+            //to show the report in a browser when done
+            showInBrowser: true,
+            collapseTests: false,
+            //to turn on screenshots after every test
+            useOnAfterCommandForScreenshot: false,
+
+        }
+        ]
+    ],
+
+    onPrepare: function (config, capabilities) {
+
+        reportAggregator = new ReportAggregator({
+            outputDir: './test/reports/html-reports/',
+            filename: 'master-report.html',
+            reportTitle: 'Master Report',
+            browserName : capabilities.browserName,
+            collapseTests: true
+        });
+        reportAggregator.clean() ;
+    },
+
+    onComplete: function(exitCode, config, capabilities, results) {
+        (async () => {
+            await reportAggregator.createReport();
+        })();
+    },
+
+
 
 
     

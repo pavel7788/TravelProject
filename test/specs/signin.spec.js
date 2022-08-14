@@ -1,7 +1,6 @@
 const SignInPage = require('../pageobjects/signin.page');
 const { expect } = require('chai');
 
-
 describe('My Login application', () => {
     it('should login with valid credentials', async () => {
         await SignInPage.open();
