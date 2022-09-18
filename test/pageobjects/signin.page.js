@@ -17,13 +17,22 @@ class SignInPage extends Page {
         return $('button[type="submit"]');
     }
 
+    async loginResult () {
+        if (await $(`//*[text()=" Logout"]`).isExisting())
+            logger.info("Successful" + '\n');
+        else
+            logger.info("Failure" + '\n');
+    }
+
     async login (username, password) {
-        logger.info(`Start: ${Date.now()}`);
         await this.inputUsername.setValue(username);
         await this.inputPassword.setValue(password);
+        if (this.btnSubmit.isClickable())
+            this.res = true;
         await this.btnSubmit.click();
-        this.res = true;
-        logger.info("Success!");
+        logger.info(`Login attempt: ${Date.now()}`);
+        await this.loginResult();
+        await browser.pause(5000);
     }
 
     /**
