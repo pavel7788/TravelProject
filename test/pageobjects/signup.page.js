@@ -29,6 +29,23 @@ class SignUpPage extends Page {
         return $("select[id = 'account_type']");
     }
 
+    get checkCaptcha () {
+        //return $('//*[@id="g-recaptcha-anchor-label"]');
+        //return $("[id='recaptcha-anchor']");
+        return $(`//*[text()="Я не робот"]`);
+    }
+
+    get verifyCaptcha () {
+        //return $('//*[@id="g-recaptcha-anchor-label"]');
+        //return $("[id='recaptcha-anchor']");
+        return $("button[id = 'recaptcha-verify-button']");
+    }
+
+    get linkConfidential () {
+        //return $(`//*[text()="Конфиденциальность"]`);
+        return $('//*[@id="rc-anchor-container"]/div[4]/div[2]/a[1]');
+    }
+
     get btnSubmit () {
         return $('button[type="submit"]');
     }
@@ -40,8 +57,17 @@ class SignUpPage extends Page {
         await this.inputEmail.setValue(email);
         await this.inputPassword.setValue(pass);
         await this.selectAccount.selectByIndex(index);
-        await this.btnSubmit.waitForClickable();
-        this.res = true;
+
+        await browser.keys('\uE004');
+        await browser.keys('\uE007');
+        //this.checkCaptcha.click();
+
+        //this.verifyCaptcha.click();
+        if (this.verifyCaptcha.isExisting())
+            this.res = true;
+
+        //await this.btnSubmit.click();
+        await browser.pause(5000);
     }
 
     /**
